@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_sale_order_nota_venta_inherit" model="ir.ui.view">
+            <field name="name">sale.order.nota.venta.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Smart button: Notas de Venta -->
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_view_nota_ventas"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="nota_venta_count == 0">
+                        <field name="nota_venta_count"
+                               string="Notas de Venta"
+                               widget="statinfo"/>
+                    </button>
+                </xpath>
+
+                <!-- Botón en header: Crear Nota de Venta -->
+                <xpath expr="//button[@name='action_preview_sale_order']" position="after">
+                    <button
+                        name="action_create_nota_venta"
+                        string="Crear Nota de Venta"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state not in ('sale', 'done')"
+                        icon="fa-file-text-o"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

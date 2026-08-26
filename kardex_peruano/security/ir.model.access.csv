@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kardex_wizard_user,kardex wizard user,model_kardex_peruano_wizard,stock.group_stock_user,1,1,1,1
+access_kardex_wizard_manager,kardex wizard manager,model_kardex_peruano_wizard,stock.group_stock_manager,1,1,1,1
+access_kardex_line_user,kardex line user,model_kardex_peruano_line,stock.group_stock_user,1,1,1,1
+access_kardex_line_manager,kardex line manager,model_kardex_peruano_line,stock.group_stock_manager,1,1,1,1

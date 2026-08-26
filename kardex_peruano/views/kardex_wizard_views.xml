@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kardex_peruano_wizard_form" model="ir.ui.view">
+        <field name="name">kardex.peruano.wizard.form</field>
+        <field name="model">kardex.peruano.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Kardex Peruano de Inventario" class="o_kardex_form">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Kardex Peruano de Inventario</h1>
+                        <h4 class="text-muted">Metodo: Costo Promedio Ponderado (SUNAT)</h4>
+                    </div>
+
+                    <group string="Parametros de Busqueda" col="4">
+                        <field name="product_id"
+                               options="{'no_create': True}"
+                               colspan="2"
+                               placeholder="Seleccione el producto..."/>
+                        <field name="location_id"
+                               options="{'no_create': True}"
+                               placeholder="Todas las ubicaciones internas"/>
+                        <field name="include_opening"/>
+                        <field name="date_from" widget="date"/>
+                        <field name="date_to" widget="date"/>
+                    </group>
+
+                    <div class="text-center mb-3">
+                        <button name="action_generar_kardex"
+                                type="object"
+                                string="Generar Kardex"
+                                class="btn btn-primary btn-lg"/>
+                        <button name="action_imprimir_kardex"
+                                type="object"
+                                string="Imprimir PDF"
+                                class="btn btn-secondary ml-2"
+                                invisible="not has_lines"/>
+                        <button name="action_exportar_excel"
+                                type="object"
+                                string="Exportar Excel"
+                                class="btn btn-success ml-2"
+                                invisible="not has_lines"/>
+                    </div>
+
+                    <div invisible="not has_lines">
+                        <div class="alert alert-info mb-2">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <strong>Producto: </strong>
+                                    <field name="product_name" readonly="1"
+                                           nolabel="1" class="o_field_text_inline"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Codigo: </strong>
+                                    <field name="product_code" readonly="1"
+                                           nolabel="1" class="o_field_text_inline"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <strong>U.M.: </strong>
+                                    <field name="product_uom" readonly="1"
+                                           nolabel="1" class="o_field_text_inline"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <field name="line_ids" readonly="1" nolabel="1">
+                            <list string="Kardex"
+                                  decoration-success="tipo == 'ENTRADA'"
+                                  decoration-danger="tipo == 'SALIDA'"
+                                  no_open="1"
+                                  create="false" delete="false" edit="false">
+                                <field name="fecha_proceso" string="Fecha Proceso"/>
+                                <field name="numero_documento" string="Nro. Documento"/>
+                                <field name="tipo" string="Tipo"
+                                       widget="badge"
+                                       decoration-success="tipo == 'ENTRADA'"
+                                       decoration-danger="tipo == 'SALIDA'"/>
+                                <field name="movimiento" string="Movimiento"/>
+                                <field name="precio_ingreso" string="Precio Ingreso"
+                                       digits="[12,2]"/>
+                                <field name="cantidad" string="Cantidad" digits="[12,2]"/>
+                                <field name="costo_promedio" string="C.P." digits="[12,5]"/>
+                                <field name="costo" string="Costo" digits="[12,2]"/>
+                                <field name="saldo" string="Saldo" digits="[12,2]"/>
+                                <field name="valor_stock" string="Valor Stock" digits="[12,2]"/>
+                                <field name="wizard_id" column_invisible="1"/>
+                            </list>
+                        </field>
+
+                        <div class="row mt-3">
+                            <div class="col-md-3">
+                                <div class="card border-success">
+                                    <div class="card-body py-2 text-center">
+                                        <h6 class="card-title text-success mb-1">Total Entradas</h6>
+                                        <div>Cant: <field name="total_entradas_qty" readonly="1"
+                                               nolabel="1" digits="[12,2]"
+                                               class="o_field_text_inline"/></div>
+                                        <div>S/ <field name="total_entradas_valor" readonly="1"
+                                               nolabel="1" digits="[12,2]"
+                                               class="o_field_text_inline"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-danger">
+                                    <div class="card-body py-2 text-center">
+                                        <h6 class="card-title text-danger mb-1">Total Salidas</h6>
+                                        <div>Cant: <field name="total_salidas_qty" readonly="1"
+                                               nolabel="1" digits="[12,2]"
+                                               class="o_field_text_inline"/></div>
+                                        <div>S/ <field name="total_salidas_valor" readonly="1"
+                                               nolabel="1" digits="[12,2]"
+                                               class="o_field_text_inline"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 offset-md-3">
+                                <div class="card border-primary">
+                                    <div class="card-body py-2 text-center">
+                                        <h6 class="card-title text-primary mb-1">Saldo Final</h6>
+                                        <div>Cant: <field name="saldo_final_qty" readonly="1"
+                                               nolabel="1" digits="[12,2]"
+                                               class="o_field_text_inline"/></div>
+                                        <div>S/ <field name="saldo_final_valor" readonly="1"
+                                               nolabel="1" digits="[12,2]"
+                                               class="o_field_text_inline"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <field name="has_lines" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_kardex_peruano_wizard" model="ir.actions.act_window">
+        <field name="name">Kardex Peruano</field>
+        <field name="res_model">kardex.peruano.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'extra-large'}</field>
+    </record>
+
+</odoo>

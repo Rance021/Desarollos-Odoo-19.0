@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_detraccion" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.detraccion</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Insertar al final del app de Contabilidad, antes del cierre -->
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Detracciones SUNAT" name="detraccion_setting_container">
+                    <setting string="Cuenta Detracciones Ventas"
+                             help="Cuenta donde se registra la detracción en facturas de cliente (ej. 104.13).">
+                        <field name="x_cuenta_detraccion_ventas_id"/>
+                    </setting>
+                    <setting string="Cuenta Detracciones Compras"
+                             help="Cuenta donde se registra la detracción en facturas de proveedor.">
+                        <field name="x_cuenta_detraccion_compras_id"/>
+                    </setting>
+                    <setting string="% Detracción por Defecto"
+                             help="Porcentaje que se pre-carga al activar el checkbox de detracción. Editable en cada factura.">
+                        <field name="x_detraccion_porcentaje_defecto"/>
+                    </setting>
+                </block>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

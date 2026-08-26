@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Vista: mrp.bom (Lista de Materiales)
+        ──────────────────────────────────────
+        Agrega el selector de método de reparto en la pestaña
+        de subproductos de la BoM, para preconfigurar el método
+        que se propagará a las órdenes de fabricación.
+    -->
+
+    <record id="view_mrp_bom_form_byproduct_cost" model="ir.ui.view">
+        <field name="name">mrp.bom.form.byproduct.cost.share</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+
+            <!--
+                Anclar al inicio de la pestaña de subproductos.
+                Usamos position="inside" sobre la page para no depender
+                del nombre interno del field de subproductos, que varía
+                entre versiones (byproduct_ids, bom_byproduct_ids, etc).
+            -->
+            <xpath expr="//page[@name='byproducts']" position="inside">
+                <group string="Configuración de Reparto de Costos" col="2">
+                    <field
+                        name="byproduct_cost_method"
+                        widget="radio"
+                        options="{'horizontal': false}"
+                    />
+                    <div class="text-muted small" colspan="2">
+                        <i class="fa fa-info-circle me-1"/>
+                        Este método se aplicará automáticamente a las órdenes de
+                        fabricación creadas desde esta lista de materiales.
+                    </div>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

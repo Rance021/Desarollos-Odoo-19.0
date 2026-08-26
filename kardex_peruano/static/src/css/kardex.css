@@ -1,0 +1,20 @@
+/* Kardex Peruano - Estilos */
+.o_kardex_form .oe_title h1 {
+    color: #1a5276;
+    font-weight: 700;
+    border-bottom: 3px solid #2980b9;
+    padding-bottom: 8px;
+}
+.o_kardex_form .o_list_view thead tr th {
+    background-color: #1a5276 !important;
+    color: #ffffff !important;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+}
+.o_kardex_form .o_data_row.o_decoration_success td {
+    background-color: #eafaf1 !important;
+}
+.o_kardex_form .o_data_row.o_decoration_danger td {
+    background-color: #fdedec !important;
+}

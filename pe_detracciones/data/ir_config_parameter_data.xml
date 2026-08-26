@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Parámetro del sistema: ID de la cuenta contable de detracciones.
+            noupdate="1": Odoo solo crea este registro en la instalación inicial.
+            Las actualizaciones del módulo (-u) NO sobreescriben el valor configurado.
+
+            Después de instalar, configurar en:
+            Configuración → Técnico → Parámetros del sistema
+            Clave: pe_detracciones.cuenta_detracciones_id
+            Valor: ID numérico de la cuenta (ej. la 104.13 - Detracciones)
+
+            Para obtener el ID desde shell:
+                env['account.account'].search([('code', 'like', '104')]).read(['id','code','name'])
+        -->
+        <record id="param_cuenta_detracciones" model="ir.config_parameter">
+            <field name="key">pe_detracciones.cuenta_detracciones_id</field>
+            <field name="value">0</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_kardex_peruano_root"
+        name="Kardex Peruano"
+        parent="stock.menu_warehouse_report"
+        action="action_kardex_peruano_wizard"
+        sequence="50"
+        groups="stock.group_stock_user"/>
+</odoo>

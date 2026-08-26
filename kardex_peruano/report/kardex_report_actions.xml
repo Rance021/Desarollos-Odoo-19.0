@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_kardex_peruano" model="ir.actions.report">
+        <field name="name">Kardex Peruano</field>
+        <field name="model">kardex.peruano.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">kardex_peruano.report_kardex_peruano</field>
+        <field name="report_file">kardex_peruano.report_kardex_peruano</field>
+        <field name="print_report_name">
+            'Kardex_%s_%s_%s' % (
+                object.product_id.default_code or object.product_id.name,
+                object.date_from.strftime('%Y%m'),
+                object.date_to.strftime('%Y%m'),
+            )
+        </field>
+        <field name="binding_model_id" ref="model_kardex_peruano_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

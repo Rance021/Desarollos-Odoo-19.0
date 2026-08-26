@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════
+         Ficha de Producto: campos de detracción SUNAT
+         Solo se muestran si l10n_pe no los expone ya en la vista.
+         Si l10n_pe ya tiene una sección para esto, este grupo
+         aparecerá en "Información General" como fallback.
+         ════════════════════════════════════════════════════════ -->
+    <record id="view_product_template_form_detraccion" model="ir.ui.view">
+        <field name="name">product.template.form.detraccion</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+
+            <!-- Insertar al final de la pestaña de información general,
+                 antes del cierre del último grupo de la tab -->
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="Detracción SUNAT" name="grupo_detraccion_producto">
+                    <field name="l10n_pe_withhold_code"
+                           string="Código Detracción"/>
+                    <field name="l10n_pe_withhold_percentage"
+                           string="% Detracción"
+                           widget="percentage"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

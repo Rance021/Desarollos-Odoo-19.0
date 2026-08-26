@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════
+         Vista formulario: tab Detracción SUNAT
+         ════════════════════════════════════════════════════════ -->
+    <record id="view_move_form_detraccion" model="ir.ui.view">
+        <field name="name">account.move.form.detraccion</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Detracción SUNAT"
+                      name="tab_detraccion"
+                      invisible="move_type not in ['out_invoice','out_refund','in_invoice','in_refund']">
+                    <group>
+                        <group string="Configuración">
+                            <field name="x_tiene_detraccion"
+                                   widget="boolean_toggle"
+                                   string="Sujeto a Detracción"/>
+                            <field name="x_detraccion_codigo"
+                                   string="Código Detracción"
+                                   invisible="not x_tiene_detraccion"/>
+                            <field name="x_detraccion_porcentaje"
+                                   string="Porcentaje (%)"
+                                   invisible="not x_tiene_detraccion"
+                                   readonly="state == 'posted'"/>
+                        </group>
+                        <group string="Cálculo" invisible="not x_tiene_detraccion">
+                            <field name="x_detraccion_monto"
+                                   string="Monto a Detraer"/>
+                            <field name="x_detraccion_aplicada"
+                                   string="Aplicada"
+                                   readonly="1"/>
+                            <field name="x_detraccion_asiento_id"
+                                   string="Asiento Generado"
+                                   readonly="1"
+                                   invisible="not x_detraccion_asiento_id"/>
+                        </group>
+                    </group>
+                    <group invisible="not x_tiene_detraccion">
+                        <button name="action_aplicar_detraccion_manual"
+                                type="object"
+                                string="Aplicar Detracción Manualmente"
+                                class="btn-warning"
+                                icon="fa-calculator"
+                                invisible="state != 'posted' or x_detraccion_aplicada"/>
+                        <button name="action_ver_asiento_detraccion"
+                                type="object"
+                                string="Ver Asiento de Detracción"
+                                class="btn-secondary"
+                                icon="fa-eye"
+                                invisible="not x_detraccion_aplicada or not x_detraccion_asiento_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════
+         Vista lista: columnas opcionales
+         ════════════════════════════════════════════════════════ -->
+    <record id="view_move_list_detraccion" model="ir.ui.view">
+        <field name="name">account.move.list.detraccion</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+                <field name="x_tiene_detraccion"
+                       string="Detr."
+                       optional="show"
+                       widget="boolean_toggle"
+                       column_invisible="context.get('default_move_type') not in ('out_invoice','out_refund','in_invoice','in_refund')"/>
+                <field name="x_detraccion_monto"
+                       string="Monto Detr."
+                       optional="hide"
+                       column_invisible="context.get('default_move_type') not in ('out_invoice','out_refund','in_invoice','in_refund')"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

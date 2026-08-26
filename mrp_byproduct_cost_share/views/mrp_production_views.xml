@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_mrp_production_form_cost_share" model="ir.ui.view">
+        <field name="name">mrp.production.form.byproduct.cost.share</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='product_qty']" position="after">
+                <field
+                    name="byproduct_cost_share_auto"
+                    string="Auto cost_share subproductos"
+                    invisible="not move_byproduct_ids"
+                />
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--
+            Hereda stock.view_picking_move_tree que es la vista list de stock.move
+            usada dentro del widget stock_move_one2many en el formulario de traslados.
+            Esta vista NO pertenece a la cadena de stock.view_picking_form, por lo tanto
+            NO desencadena la validación de l10n_pe_edi_stock.
+        -->
+        <record id="view_stock_move_ubicaciones_inherit" model="ir.ui.view">
+            <field name="name">stock.move.ubicaciones.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_picking_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field
+                        name="x_ubicaciones_sugeridas"
+                        string="Ubicaciones"
+                        optional="show"
+                        readonly="1"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

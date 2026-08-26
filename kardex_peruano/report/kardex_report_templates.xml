@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_kardex_peruano_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc"/>
+            <div class="page">
+                <div class="row mb-3">
+                    <div class="col-12 text-center">
+                        <h3>KARDEX VALORIZADO DE INVENTARIO</h3>
+                        <p>Metodo: Costo Promedio Ponderado</p>
+                        <p>Periodo:
+                            <strong><t t-esc="doc.date_from.strftime('%d/%m/%Y')"/></strong>
+                            al
+                            <strong><t t-esc="doc.date_to.strftime('%d/%m/%Y')"/></strong>
+                        </p>
+                    </div>
+                </div>
+
+                <table class="table table-sm table-bordered" style="font-size:7.5pt;">
+                    <tr>
+                        <td style="font-weight:bold; background:#D6EAF8;">Producto:</td>
+                        <td colspan="3"><t t-esc="doc.product_id.display_name"/></td>
+                        <td style="font-weight:bold; background:#D6EAF8;">Codigo:</td>
+                        <td><t t-esc="doc.product_id.default_code or '-'"/></td>
+                        <td style="font-weight:bold; background:#D6EAF8;">U.M.:</td>
+                        <td><t t-esc="doc.product_id.uom_id.name"/></td>
+                    </tr>
+                </table>
+
+                <table class="table table-sm table-bordered mt-2" style="font-size:7.5pt; width:100%;">
+                    <thead>
+                        <tr style="background:#1A5276; color:white; text-align:center;">
+                            <th>Fecha</th>
+                            <th>Nro. Documento</th>
+                            <th>Tipo</th>
+                            <th>Movimiento</th>
+                            <th>Precio Ingreso</th>
+                            <th>Cantidad</th>
+                            <th>C.P.</th>
+                            <th>Costo</th>
+                            <th>Saldo</th>
+                            <th>Valor Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="doc.line_ids" t-as="line">
+                            <tr t-att-style="'background:#EAFAF1;' if line.tipo == 'ENTRADA' else 'background:#FDEDEC;'">
+                                <td><t t-esc="line.fecha_proceso.strftime('%d/%m/%Y')"/></td>
+                                <td><t t-esc="line.numero_documento or ''"/></td>
+                                <td style="text-align:center; font-weight:bold;">
+                                    <t t-esc="line.tipo"/>
+                                </td>
+                                <td><t t-esc="line.movimiento"/></td>
+                                <td style="text-align:right;">
+                                    <t t-if="line.precio_ingreso">
+                                        S/ <t t-esc="'%.2f' % line.precio_ingreso"/>
+                                    </t>
+                                </td>
+                                <td style="text-align:right;">
+                                    <t t-esc="'%.2f' % abs(line.cantidad)"/>
+                                </td>
+                                <td style="text-align:right;">
+                                    S/ <t t-esc="'%.5f' % line.costo_promedio"/>
+                                </td>
+                                <td style="text-align:right;">
+                                    <t t-if="line.tipo == 'SALIDA'">-</t>
+                                    S/ <t t-esc="'%.2f' % abs(line.costo)"/>
+                                </td>
+                                <td style="text-align:right; font-weight:bold;">
+                                    <t t-esc="'%.2f' % line.saldo"/>
+                                </td>
+                                <td style="text-align:right; font-weight:bold;">
+                                    S/ <t t-esc="'%.2f' % line.valor_stock"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background:#1A5276; color:white; font-weight:bold;">
+                            <td colspan="5" style="text-align:right;">TOTALES:</td>
+                            <td style="text-align:right;">
+                                <t t-esc="'%.2f' % doc.total_entradas_qty"/>
+                                / <t t-esc="'%.2f' % doc.total_salidas_qty"/>
+                            </td>
+                            <td></td>
+                            <td style="text-align:right;">
+                                S/ <t t-esc="'%.2f' % (doc.total_entradas_valor + doc.total_salidas_valor)"/>
+                            </td>
+                            <td style="text-align:right;">
+                                <t t-esc="'%.2f' % doc.saldo_final_qty"/>
+                            </td>
+                            <td style="text-align:right;">
+                                S/ <t t-esc="'%.2f' % doc.saldo_final_valor"/>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_kardex_peruano">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="kardex_peruano.report_kardex_peruano_document"
+                   t-lang="doc.env.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
