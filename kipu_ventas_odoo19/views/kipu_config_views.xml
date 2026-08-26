@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Form: kipu.sync.config ── -->
+    <record id="view_kipu_config_form" model="ir.ui.view">
+        <field name="name">kipu.sync.config.form</field>
+        <field name="model">kipu.sync.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración Kipu">
+                <header>
+                    <button name="action_probar_conexion"
+                            string="Probar conexión"
+                            type="object"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon"
+                            title="Archivado"
+                            bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Conexión API">
+                            <field name="token" password="True"/>
+                            <field name="local_id"/>
+                            <field name="warehouse_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Estado">
+                            <field name="estado_conexion"
+                                   widget="badge"
+                                   decoration-success="estado_conexion == 'ok'"
+                                   decoration-danger="estado_conexion == 'error'"
+                                   decoration-warning="estado_conexion == 'no_probado'"/>
+                            <field name="ultima_sync"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Detalle del error"
+                           invisible="not nota_error">
+                        <field name="nota_error" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── List: kipu.sync.config ── -->
+    <record id="view_kipu_config_list" model="ir.ui.view">
+        <field name="name">kipu.sync.config.list</field>
+        <field name="model">kipu.sync.config</field>
+        <field name="arch" type="xml">
+            <list string="Configuraciones Kipu">
+                <field name="name"/>
+                <field name="local_id"/>
+                <field name="ultima_sync"/>
+                <field name="estado_conexion"
+                       widget="badge"
+                       decoration-success="estado_conexion == 'ok'"
+                       decoration-danger="estado_conexion == 'error'"
+                       decoration-warning="estado_conexion == 'no_probado'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Action ── -->
+    <record id="action_kipu_config" model="ir.actions.act_window">
+        <field name="name">Configuración Kipu</field>
+        <field name="res_model">kipu.sync.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

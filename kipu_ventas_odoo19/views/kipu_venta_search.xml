@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kipu_venta_search" model="ir.ui.view">
+        <field name="name">kipu.venta.search</field>
+        <field name="model">kipu.venta</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="serie_numero"/>
+                <field name="razon_social"/>
+                <field name="num_doc_adquirente"/>
+                <filter name="filter_aceptado" string="Aceptados"
+                        domain="[('estado', '=', 'Aceptado')]"/>
+                <filter name="filter_anulado" string="Anulados"
+                        domain="[('estado', '=', 'Anulado')]"/>
+                <separator/>
+                <filter name="filter_facturas" string="Facturas"
+                        domain="[('tipo_documento', '=', '01')]"/>
+                <filter name="filter_boletas" string="Boletas"
+                        domain="[('tipo_documento', '=', '03')]"/>
+                <filter name="filter_nc" string="Notas credito"
+                        domain="[('tipo_documento', '=', '07')]"/>
+                <group>
+                    <filter name="group_estado" string="Estado"
+                            context="{'group_by': 'estado'}"/>
+                    <filter name="group_tipo" string="Tipo"
+                            context="{'group_by': 'tipo_documento'}"/>
+                    <filter name="group_mes" string="Mes"
+                            context="{'group_by': 'fecha_emision:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

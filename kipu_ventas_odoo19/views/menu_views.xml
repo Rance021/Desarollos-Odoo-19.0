@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menú raíz -->
+    <menuitem id="menu_kipu_root"
+              name="Kipu Ventas"
+              sequence="50"
+              web_icon="kipu_ventas_odoo19,static/description/icon.png"/>
+
+    <!-- Submenú principal -->
+    <menuitem id="menu_kipu_ventas"
+              name="Documentos"
+              parent="menu_kipu_root"
+              sequence="10"/>
+
+    <menuitem id="menu_kipu_ventas_list"
+              name="Ventas"
+              parent="menu_kipu_ventas"
+              action="action_kipu_ventas"
+              sequence="10"/>
+
+    <menuitem id="menu_kipu_sync_manual"
+              name="Sincronizar ahora"
+              parent="menu_kipu_ventas"
+              action="action_kipu_sync_wizard"
+              sequence="20"/>
+
+    <!-- Configuración -->
+    <menuitem id="menu_kipu_config"
+              name="Configuración"
+              parent="menu_kipu_root"
+              sequence="90"/>
+
+    <menuitem id="menu_kipu_config_item"
+              name="Conexiones Kipu"
+              parent="menu_kipu_config"
+              action="action_kipu_config"
+              sequence="10"/>
+
+    <menuitem id="menu_kipu_payment_mapping_item"
+              name="Mapeo de Pagos"
+              parent="menu_kipu_config"
+              action="action_kipu_payment_mapping"
+              sequence="20"/>
+
+    <record id="action_kipu_cron" model="ir.actions.act_window">
+        <field name="name">Horario de Procesamiento</field>
+        <field name="res_model">ir.cron</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="kipu_ventas_odoo19.ir_cron_kipu_sync_diaria"/>
+    </record>
+
+    <menuitem id="menu_kipu_cron_item"
+              name="Horario de Procesamiento"
+              parent="menu_kipu_config"
+              action="action_kipu_cron"
+              sequence="30"/>
+
+</odoo>

@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kipu_config_manager,kipu.sync.config manager,model_kipu_sync_config,base.group_system,1,1,1,1
+access_kipu_config_user,kipu.sync.config user,model_kipu_sync_config,base.group_user,1,0,0,0
+access_kipu_venta_manager,kipu.venta manager,model_kipu_venta,base.group_system,1,1,1,1
+access_kipu_venta_user,kipu.venta user,model_kipu_venta,base.group_user,1,0,0,0
+access_kipu_venta_detalle_manager,kipu.venta.detalle manager,model_kipu_venta_detalle,base.group_system,1,1,1,1
+access_kipu_venta_detalle_user,kipu.venta.detalle user,model_kipu_venta_detalle,base.group_user,1,0,0,0
+access_kipu_venta_pago_manager,kipu.venta.pago manager,model_kipu_venta_pago,base.group_system,1,1,1,1
+access_kipu_venta_pago_user,kipu.venta.pago user,model_kipu_venta_pago,base.group_user,1,0,0,0
+access_kipu_sync_wizard_user,kipu.sync.wizard user,model_kipu_sync_wizard,base.group_user,1,1,1,1
+access_kipu_payment_mapping_manager,kipu.payment.mapping manager,model_kipu_payment_mapping,base.group_system,1,1,1,1
+access_kipu_payment_mapping_user,kipu.payment.mapping user,model_kipu_payment_mapping,base.group_user,1,0,0,0

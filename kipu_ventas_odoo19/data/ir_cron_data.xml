@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ir_cron_kipu_sync_diaria" model="ir.cron">
+        <field name="name">Kipu — Sincronización diaria de ventas</field>
+        <field name="model_id" ref="model_kipu_venta"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sincronizar_ayer()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+        <!-- Se ejecuta a las 07:00 AM UTC (aprox. 2am Perú) -->
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 07:00:00')"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kipu_venta_list" model="ir.ui.view">
+        <field name="name">kipu.venta.list</field>
+        <field name="model">kipu.venta</field>
+        <field name="arch" type="xml">
+            <list string="Ventas Kipu"
+                  decoration-danger="estado == 'Anulado'"
+                  decoration-muted="estado == 'En Proceso'">
+                <header>
+                    <button name="action_procesar_odoo" string="Procesar Todo" type="object" class="oe_highlight"/>
+                </header>
+                <field name="fecha_emision"/>
+                <field name="serie_numero"/>
+                <field name="tipo_documento"/>
+                <field name="razon_social"/>
+                <field name="canal"/>
+                <field name="tipo_moneda"/>
+                <field name="total_neto" sum="Total neto"/>
+                <field name="total_igv" sum="Total IGV"/>
+                <field name="total_venta" sum="Total venta"/>
+                <field name="invoice_state" widget="badge" decoration-success="invoice_state == 'invoiced'" decoration-muted="invoice_state == 'to_invoice'"/>
+                <field name="picking_state" widget="badge" decoration-success="picking_state == 'delivered'" decoration-muted="picking_state == 'to_deliver'"/>
+                <field name="payment_state" widget="badge" decoration-success="payment_state == 'paid'" decoration-muted="payment_state == 'to_pay'"/>
+                <field name="estado"
+                       widget="badge"
+                       decoration-success="estado == 'Aceptado'"
+                       decoration-danger="estado == 'Anulado'"
+                       decoration-warning="estado == 'En Proceso'"/>
+                <field name="config_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_kipu_venta_form" model="ir.ui.view">
+        <field name="name">kipu.venta.form</field>
+        <field name="model">kipu.venta</field>
+        <field name="arch" type="xml">
+            <form string="Documento Kipu">
+                <header>
+                    <button name="action_procesar_odoo" string="Procesar Todo" type="object" class="oe_highlight" invisible="estado != 'Aceptado' or (invoice_state == 'invoiced' and picking_state == 'delivered' and payment_state == 'paid')"/>
+                    <button name="action_create_invoice" string="Procesar Factura" type="object" invisible="estado != 'Aceptado' or invoice_state == 'invoiced'"/>
+                    <button name="action_create_picking" string="Procesar Despacho" type="object" invisible="estado != 'Aceptado' or picking_state == 'delivered'"/>
+                    <button name="action_create_payments" string="Procesar Pagos" type="object" invisible="estado != 'Aceptado' or payment_state == 'paid'"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_move" type="object" class="oe_stat_button" icon="fa-file-text-o" invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Factura</span>
+                            </div>
+                        </button>
+                        <button name="action_view_picking" type="object" class="oe_stat_button" icon="fa-truck" invisible="not picking_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Albarán</span>
+                            </div>
+                        </button>
+                        <button name="action_view_payments" type="object" class="oe_stat_button" icon="fa-money" invisible="not account_payment_ids">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Pagos Odoo</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="serie_numero"/>
+                        <h1><field name="serie_numero" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Documento">
+                            <field name="tipo_documento" readonly="1"/>
+                            <field name="fecha_emision" readonly="1"/>
+                            <field name="canal" readonly="1"/>
+                            <field name="estado"
+                                   widget="badge"
+                                   decoration-success="estado == 'Aceptado'"
+                                   decoration-danger="estado == 'Anulado'"
+                                   decoration-warning="estado == 'En Proceso'"/>
+                            <field name="config_id" readonly="1"/>
+                        </group>
+                        <group string="Cliente">
+                            <field name="razon_social" readonly="1"/>
+                            <field name="tipo_doc_adquirente" readonly="1"/>
+                            <field name="num_doc_adquirente" readonly="1"/>
+                        </group>
+                        <group string="Odoo">
+                            <field name="move_id"/>
+                            <field name="invoice_state" widget="badge" decoration-success="invoice_state == 'invoiced'"/>
+                            <field name="picking_id"/>
+                            <field name="picking_state" widget="badge" decoration-success="picking_state == 'delivered'"/>
+                            <field name="payment_state" widget="badge" decoration-success="payment_state == 'paid'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Montos">
+                            <field name="tipo_moneda" readonly="1"/>
+                            <field name="total_neto" readonly="1"/>
+                            <field name="total_igv" readonly="1"/>
+                            <field name="recargo" readonly="1"/>
+                            <field name="total_otros_tributos" readonly="1"/>
+                            <field name="total_venta" readonly="1"/>
+                            <field name="tipo_cambio" readonly="1" invisible="tipo_cambio == 0.0"/>
+                        </group>
+                        <group string="Doc. afectado" invisible="not serie_numero_afectado">
+                            <field name="serie_numero_afectado" readonly="1"/>
+                            <field name="tipo_doc_afectado" readonly="1"/>
+                            <field name="codigo_motivo" readonly="1"/>
+                            <field name="motivo_documento" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detalle">
+                            <field name="detalle_ids" readonly="1">
+                                <list>
+                                    <field name="codigo_producto"/>
+                                    <field name="descripcion"/>
+                                    <field name="nombre_clase"/>
+                                    <field name="nombre_categoria"/>
+                                    <field name="cantidad"/>
+                                    <field name="importe_original"/>
+                                    <field name="descuento_porcentaje" string="Dto %"/>
+                                    <field name="importe_descuento" string="Dto S/"/>
+                                    <field name="recargo"/>
+                                    <field name="total_neto" sum="Neto"/>
+                                    <field name="importe_igv" sum="IGV"/>
+                                    <field name="total_venta" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Pagos">
+                            <field name="pago_ids" readonly="1">
+                                <list>
+                                    <field name="forma_pago"/>
+                                    <field name="tipo_moneda"/>
+                                    <field name="monto"/>
+                                    <field name="fecha_pago"/>
+                                    <field name="tipo_cambio" optional="hide"/>
+                                    <field name="id_forma_pago" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_kipu_ventas" model="ir.actions.act_window">
+        <field name="name">Documentos de venta</field>
+        <field name="res_model">kipu.venta</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_server_procesar_odoo" model="ir.actions.server">
+        <field name="name">Procesar a Odoo</field>
+        <field name="model_id" ref="kipu_ventas_odoo19.model_kipu_venta"/>
+        <field name="binding_model_id" ref="kipu_ventas_odoo19.model_kipu_venta"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_procesar_odoo()
+        </field>
+    </record>
+
+</odoo>

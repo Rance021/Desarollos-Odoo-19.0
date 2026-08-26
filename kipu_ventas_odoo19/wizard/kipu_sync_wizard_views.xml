@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kipu_sync_wizard_form" model="ir.ui.view">
+        <field name="name">kipu.sync.wizard.form</field>
+        <field name="model">kipu.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sincronizar desde Kipu">
+                <group>
+                    <field name="config_id"/>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    <i class="fa fa-info-circle"/> El rango máximo permitido por la API Kipu es
+                    <strong>2 meses</strong>. Los documentos ya existentes serán actualizados.
+                </div>
+                <footer>
+                    <button name="action_sincronizar"
+                            string="Sincronizar"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_kipu_sync_wizard" model="ir.actions.act_window">
+        <field name="name">Sincronizar Kipu</field>
+        <field name="res_model">kipu.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
