@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form view -->
+    <record id="view_stock_temperature_log_form" model="ir.ui.view">
+        <field name="name">stock.temperature.log.form</field>
+        <field name="model">stock.temperature.log</field>
+        <field name="arch" type="xml">
+            <form string="Registro de Temperatura">
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                            invisible="state not in ('draft','confirmed')"/>
+                    <button name="action_draft" string="Restablecer a borrador" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Origen">
+                            <field name="origin_type" widget="radio"/>
+                            <field name="picking_id"
+                                   invisible="origin_type != 'reception'"/>
+                            <field name="quant_id"
+                                   invisible="origin_type != 'inventory'"/>
+                            <field name="production_id"
+                                   invisible="origin_type != 'manufacturing'"/>
+                        </group>
+                        <group string="Detalle">
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="product_id"/>
+                            <field name="lot_id" invisible="not product_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Temperatura">
+                        <group>
+                            <field name="temperature"/>
+                            <field name="temperature_unit" widget="radio" class="oe_inline"/>
+                            <field name="temperature_celsius" readonly="1"/>
+                        </group>
+                        <group string="Límites (°C)">
+                            <field name="min_temp"/>
+                            <field name="max_temp"/>
+                            <field name="temp_status" widget="badge"
+                                   decoration-success="temp_status == 'ok'"
+                                   decoration-danger="temp_status in ('low','high')"
+                                   decoration-warning="temp_status == 'undefined'"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="temp_status != 'high'">
+                        Temperatura por encima del máximo permitido.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="temp_status != 'low'">
+                        Temperatura por debajo del mínimo permitido.
+                    </div>
+                    <notebook>
+                        <page string="Lecturas adicionales" name="lines">
+                            <field name="line_ids" widget="one2many">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="description"/>
+                                    <field name="temperature"/>
+                                    <field name="temperature_unit" readonly="1"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes_page">
+                            <field name="notes" placeholder="Observaciones adicionales..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- List view -->
+    <record id="view_stock_temperature_log_list" model="ir.ui.view">
+        <field name="name">stock.temperature.log.list</field>
+        <field name="model">stock.temperature.log</field>
+        <field name="arch" type="xml">
+            <list string="Registros de Temperatura"
+                  decoration-danger="temp_status in ('low','high')"
+                  decoration-success="temp_status == 'ok'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="origin_type" widget="badge"/>
+                <field name="product_id" optional="show"/>
+                <field name="lot_id" optional="show"/>
+                <field name="temperature"/>
+                <field name="temperature_unit"/>
+                <field name="temperature_celsius" string="Temp. °C" optional="show"/>
+                <field name="temp_status" widget="badge"
+                       decoration-success="temp_status == 'ok'"
+                       decoration-danger="temp_status in ('low','high')"
+                       decoration-warning="temp_status == 'undefined'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"
+                       decoration-warning="state == 'draft'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="user_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search view — solo campos simples, sin Many2one complejos -->
+    <record id="view_stock_temperature_log_search" model="ir.ui.view">
+        <field name="name">stock.temperature.log.search</field>
+        <field name="model">stock.temperature.log</field>
+        <field name="arch" type="xml">
+            <search string="Registros de Temperatura">
+                <field name="name" string="Referencia"/>
+                <field name="product_id" string="Producto"/>
+                <field name="user_id" string="Responsable"/>
+                <filter string="Fuera de rango" name="out_of_range"
+                        domain="['|',('temp_status','=','low'),('temp_status','=','high')]"/>
+                <filter string="Dentro de rango" name="in_range"
+                        domain="[('temp_status','=','ok')]"/>
+                <separator/>
+                <filter string="Recepciones" name="filter_reception"
+                        domain="[('origin_type','=','reception')]"/>
+                <filter string="Inventario" name="filter_inventory"
+                        domain="[('origin_type','=','inventory')]"/>
+                <filter string="Fabricación" name="filter_manufacturing"
+                        domain="[('origin_type','=','manufacturing')]"/>
+                <separator/>
+                <filter string="Confirmados" name="confirmed"
+                        domain="[('state','=','confirmed')]"/>
+                <separator/>
+                <filter string="Agrupar por Origen" name="group_origin"
+                        context="{'group_by':'origin_type'}"/>
+                <filter string="Agrupar por Producto" name="group_product"
+                        context="{'group_by':'product_id'}"/>
+                <filter string="Agrupar por Estado" name="group_status"
+                        context="{'group_by':'temp_status'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Graph view -->
+    <record id="view_stock_temperature_log_graph" model="ir.ui.view">
+        <field name="name">stock.temperature.log.graph</field>
+        <field name="model">stock.temperature.log</field>
+        <field name="arch" type="xml">
+            <graph string="Temperaturas" type="line" sample="1">
+                <field name="date" type="row"/>
+                <field name="temperature_celsius" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_stock_temperature_log" model="ir.actions.act_window">
+        <field name="name">Registros de Temperatura</field>
+        <field name="res_model">stock.temperature.log</field>
+        <field name="view_mode">list,form,graph</field>
+        <field name="search_view_id" ref="view_stock_temperature_log_search"/>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay registros de temperatura
+            </p>
+            <p>
+                Los registros se crean desde recepciones, inventarios y fabricación.
+            </p>
+        </field>
+    </record>
+
+</odoo>

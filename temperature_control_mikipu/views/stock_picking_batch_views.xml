@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_picking_batch_temperature_form" model="ir.ui.view">
+        <field name="name">stock.picking.batch.temperature.form</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="action_view_temperature_logs"
+                        icon="fa-thermometer-half">
+                    <field name="temperature_log_count" widget="statinfo"
+                           string="Temperaturas"/>
+                </button>
+            </xpath>
+
+            <!-- Botón de acción -->
+            <xpath expr="//header/button[last()]" position="after">
+                <button name="action_register_temperature"
+                        string="Registrar Temperatura del Lote"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state in ('done','cancel')"/>
+            </xpath>
+
+            <!-- Alerta de estado -->
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="temp_status_summary != 'warning'">
+                    ⚠️ Se han detectado temperaturas <b>fuera del rango</b> en este lote.
+                </div>
+            </xpath>
+
+            <!-- Pestaña de temperaturas -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Temperaturas del Lote" name="temperatures">
+                    <field name="temperature_log_ids" widget="one2many" readonly="1">
+                        <list decoration-danger="temp_status in ('low','high')"
+                              decoration-success="temp_status == 'ok'">
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="lot_id"/>
+                            <field name="temperature"/>
+                            <field name="temperature_unit"/>
+                            <field name="temperature_celsius" string="Temp. °C"/>
+                            <field name="temp_status" widget="badge"
+                                   decoration-success="temp_status == 'ok'"
+                                   decoration-danger="temp_status in ('low','high')"/>
+                            <field name="state" widget="badge"/>
+                        </list>
+                    </field>
+                    <button name="action_register_temperature" type="object"
+                            string="+ Añadir lectura de temperatura"
+                            class="btn btn-outline-primary btn-sm mt-2"
+                            invisible="state in ('done','cancel')"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

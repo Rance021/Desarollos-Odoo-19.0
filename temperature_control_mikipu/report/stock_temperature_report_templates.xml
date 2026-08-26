@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_temperature_log_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Registro de Control de Temperatura</h2>
+                        <h4 t-field="doc.name"/>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <strong>Origen:</strong>
+                        <span t-field="doc.origin_type"/>
+                    </div>
+                    <div class="col-6">
+                        <strong>Fecha:</strong>
+                        <span t-field="doc.date"/>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6" t-if="doc.picking_id">
+                        <strong>Recepción:</strong>
+                        <span t-field="doc.picking_id.name"/>
+                    </div>
+                    <div class="col-6" t-if="doc.production_id">
+                        <strong>Fabricación:</strong>
+                        <span t-field="doc.production_id.name"/>
+                    </div>
+                    <div class="col-6" t-if="doc.quant_id">
+                        <strong>Inventario:</strong>
+                        <span t-esc="doc.quant_id.product_id.display_name"/>
+                    </div>
+                </div>
+                <div class="row mt-2" t-if="doc.product_id">
+                    <div class="col-6">
+                        <strong>Producto:</strong>
+                        <span t-field="doc.product_id.display_name"/>
+                    </div>
+                    <div class="col-6" t-if="doc.lot_id">
+                        <strong>Lote / Nº serie:</strong>
+                        <span t-field="doc.lot_id.name"/>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Punto de medición</th>
+                                    <th class="text-end">Temperatura</th>
+                                    <th class="text-end">Temp. (°C)</th>
+                                    <th>Estado</th>
+                                    <th>Nota</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Lectura principal</strong></td>
+                                    <td class="text-end">
+                                        <span t-field="doc.temperature"/>
+                                        <span t-field="doc.temperature_unit"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="doc.temperature_celsius"/> °C
+                                    </td>
+                                    <td>
+                                        <span t-field="doc.temp_status"/>
+                                    </td>
+                                    <td/>
+                                </tr>
+                                <t t-foreach="doc.line_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.description"/></td>
+                                        <td class="text-end">
+                                            <span t-field="line.temperature"/>
+                                            <span t-field="line.temperature_unit"/>
+                                        </td>
+                                        <td class="text-end">—</td>
+                                        <td>—</td>
+                                        <td><span t-field="line.notes"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row mt-2" t-if="doc.min_temp or doc.max_temp">
+                    <div class="col-12">
+                        <p>
+                            <strong>Rango aceptable:</strong>
+                            <t t-if="doc.min_temp">Mínimo: <span t-field="doc.min_temp"/> °C</t>
+                            <t t-if="doc.min_temp and doc.max_temp"> / </t>
+                            <t t-if="doc.max_temp">Máximo: <span t-field="doc.max_temp"/> °C</t>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row mt-2" t-if="doc.notes">
+                    <div class="col-12">
+                        <strong>Observaciones:</strong>
+                        <p t-field="doc.notes"/>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-4 offset-8 text-center">
+                        <div style="border-top: 1px solid #000; padding-top: 4px;">
+                            <span t-field="doc.user_id.name"/>
+                        </div>
+                        <small>Responsable</small>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_temperature_log">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="temperature_control_mikipu.report_temperature_log_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

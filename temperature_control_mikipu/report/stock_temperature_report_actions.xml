@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_temperature_log" model="ir.actions.report">
+        <field name="name">Registro de Temperatura</field>
+        <field name="model">stock.temperature.log</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">temperature_control_mikipu.report_temperature_log</field>
+        <field name="report_file">temperature_control_mikipu.report_temperature_log</field>
+    </record>
+</odoo>

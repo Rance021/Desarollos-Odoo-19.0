@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú en Inventario -->
+    <menuitem
+        id="menu_stock_temperature_root"
+        name="Temperatura"
+        parent="stock.menu_stock_root"
+        sequence="99"/>
+
+    <menuitem
+        id="menu_stock_temperature_log"
+        name="Registros de Temperatura"
+        parent="menu_stock_temperature_root"
+        action="action_stock_temperature_log"
+        sequence="10"/>
+
+    <!-- Menú en Fabricación -->
+    <menuitem
+        id="menu_mrp_temperature_log"
+        name="Temperatura"
+        parent="mrp.menu_mrp_root"
+        sequence="99"/>
+
+    <menuitem
+        id="menu_mrp_temperature_log_action"
+        name="Registros de Temperatura"
+        parent="menu_mrp_temperature_log"
+        action="action_stock_temperature_log"
+        sequence="10"/>
+</odoo>

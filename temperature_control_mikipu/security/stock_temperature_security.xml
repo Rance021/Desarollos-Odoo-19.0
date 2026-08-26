@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- En Odoo 19 res.groups ya no tiene category_id.
+             Usamos grupos estándar de stock/mrp en el CSV de accesos.
+             Este archivo queda solo como placeholder por si se necesitan
+             reglas de record rules en el futuro. -->
+    </data>
+</odoo>

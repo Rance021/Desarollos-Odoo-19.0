@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Botón y smart button en stock.picking -->
+    <record id="view_stock_picking_temperature_form" model="ir.ui.view">
+        <field name="name">stock.picking.temperature.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button de temperatura -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="action_view_temperature_logs"
+                        icon="fa-thermometer-half"
+                        invisible="picking_type_code != 'incoming'">
+                    <field name="temperature_log_count" widget="statinfo"
+                           string="Temperaturas"/>
+                </button>
+            </xpath>
+
+            <!-- Botón de acción rápida en la barra de estado -->
+            <xpath expr="//header/button[last()]" position="after">
+                <button name="action_register_temperature"
+                        string="Registrar Temperatura"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="picking_type_code != 'incoming' or state in ('done','cancel')"/>
+            </xpath>
+
+            <!-- Indicador de estado en el body -->
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="temp_status_summary != 'warning' or picking_type_code != 'incoming'">
+                    ⚠️ Se han detectado temperaturas <b>fuera del rango</b> aceptable en esta recepción.
+                </div>
+                <div class="alert alert-info" role="alert"
+                     invisible="temp_status_summary != 'pending' or picking_type_code != 'incoming' or not has_temperature_products">
+                    🌡️ Esta recepción contiene productos que requieren control de temperatura.
+                    <a href="#" class="btn btn-sm btn-primary ms-2"
+                       name="action_register_temperature" type="object">
+                        Registrar temperatura ahora
+                    </a>
+                </div>
+            </xpath>
+
+            <!-- Pestaña de temperaturas -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Temperaturas" name="temperatures"
+                      invisible="picking_type_code != 'incoming'">
+                    <field name="temperature_log_ids" widget="one2many" readonly="1">
+                        <list string="Registros de temperatura"
+                              decoration-danger="temp_status in ('low','high')"
+                              decoration-success="temp_status == 'ok'">
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="lot_id"/>
+                            <field name="temperature"/>
+                            <field name="temperature_unit"/>
+                            <field name="temperature_celsius" string="Temp. °C"/>
+                            <field name="temp_status" widget="badge"
+                                   decoration-success="temp_status == 'ok'"
+                                   decoration-danger="temp_status in ('low','high')"/>
+                            <field name="state" widget="badge"/>
+                            <field name="user_id"/>
+                        </list>
+                    </field>
+                    <div class="text-muted mt-2">
+                        <button name="action_register_temperature" type="object"
+                                class="btn btn-outline-primary btn-sm"
+                                invisible="state in ('done','cancel')">
+                            + Añadir lectura de temperatura
+                        </button>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Columna en list view de recepciones -->
+    <record id="view_stock_picking_temperature_list" model="ir.ui.view">
+        <field name="name">stock.picking.temperature.list</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="temp_status_summary" optional="show" widget="badge"
+                       decoration-success="temp_status_summary == 'ok'"
+                       decoration-danger="temp_status_summary == 'warning'"
+                       decoration-warning="temp_status_summary == 'pending'"
+                       string="Temperatura"
+                       invisible="picking_type_code != 'incoming'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

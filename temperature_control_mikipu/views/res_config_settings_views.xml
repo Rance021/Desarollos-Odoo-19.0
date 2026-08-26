@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_temperature" model="ir.ui.view">
+        <field name="name">res.config.settings.temperature</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Temperatura" string="Temperatura" data-key="temperature_control_mikipu">
+                <h2>Control de Temperatura</h2>
+                <div class="row mt16 o_settings_container" id="temperature_settings">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="temperature_mandatory_reception"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="temperature_mandatory_reception"/>
+                            <div class="text-muted">
+                                Exigir temperatura al validar recepciones con productos controlados.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="temperature_mandatory_inventory"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="temperature_mandatory_inventory"/>
+                            <div class="text-muted">
+                                Exigir temperatura al validar inventarios físicos.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="temperature_mandatory_manufacturing"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="temperature_mandatory_manufacturing"/>
+                            <div class="text-muted">
+                                Exigir temperatura al cerrar órdenes de fabricación.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="temperature_default_unit" string="Unidad predeterminada"/>
+                            <field name="temperature_default_unit" class="o_light_label"/>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
