@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Agregar campo en la vista de contacto individual (form) -->
+    <record id="view_partner_form_invoice_cc" model="ir.ui.view">
+        <field name="name">res.partner.form.invoice.cc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='function']" position="after">
+                <field name="invoice_cc"
+                       invisible="parent_id == False"
+                       widget="boolean_toggle"
+                       string="Recibe facturas (CC)"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
